@@ -22,6 +22,10 @@ public class Scrollable {
         isScrolledLeft = false;
     }
 
+    public void stop(){
+        velocity.x = 0;
+    }
+
     public void update(float delta) {
         position.add(velocity.cpy().scl(delta));
 

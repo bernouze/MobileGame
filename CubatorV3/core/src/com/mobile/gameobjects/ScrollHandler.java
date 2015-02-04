@@ -1,5 +1,8 @@
 package com.mobile.gameobjects;
 
+import com.mobile.gameworld.GameWorld;
+import com.mobile.helpers.AssetLoader;
+
 /**
  * Created by justin on 2/4/2015.
  */
@@ -9,15 +12,32 @@ public class ScrollHandler {
     private Pipe pipe1, pipe2, pipe3;
     public static final int SCROLL_SPEED = -59;
     public static final int PIPE_GAP = 49;
+    private GameWorld gameWorld;
 
-    public ScrollHandler(float yPos) {
+    public ScrollHandler(GameWorld gameWorld, float yPos) {
+        this.gameWorld = gameWorld;
         frontGrass = new Grass(0, yPos, 143, 11, SCROLL_SPEED);
         backGrass = new Grass(frontGrass.getTailX(), yPos, 143, 11,
                 SCROLL_SPEED);
 
-        pipe1 = new Pipe(210, 0, 22, 60, SCROLL_SPEED);
-        pipe2 = new Pipe(pipe1.getTailX() + PIPE_GAP, 0, 22, 70, SCROLL_SPEED);
-        pipe3 = new Pipe(pipe2.getTailX() + PIPE_GAP, 0, 22, 60, SCROLL_SPEED);
+        pipe1 = new Pipe(210, 0, 22, 60, SCROLL_SPEED, yPos);
+        pipe2 = new Pipe(pipe1.getTailX() + PIPE_GAP, 0, 22, 70, SCROLL_SPEED, yPos);
+        pipe3 = new Pipe(pipe2.getTailX() + PIPE_GAP, 0, 22, 60, SCROLL_SPEED, yPos);
+    }
+
+    public void updateReady(float delta)
+    {
+        frontGrass.update(delta);
+        backGrass.update(delta);
+
+        // Same with grass
+        if (frontGrass.isScrolledLeft()) {
+            frontGrass.reset(backGrass.getTailX());
+
+        } else if (backGrass.isScrolledLeft()) {
+            backGrass.reset(frontGrass.getTailX());
+
+        }
     }
 
     public void update(float delta) {
@@ -47,6 +67,49 @@ public class ScrollHandler {
             backGrass.reset(frontGrass.getTailX());
 
         }
+    }
+
+    public void stop(){
+        frontGrass.stop();
+        backGrass.stop();
+        pipe1.stop();
+        pipe2.stop();
+        pipe3.stop();
+    }
+
+    public boolean collides(Player player)
+    {
+        if (!pipe1.isScored()
+                && pipe1.getX() + (pipe1.getWidth() / 2) < player.getX()
+                + player.getWidth()) {
+            gameWorld.addScore(1);
+            pipe1.setScored(true);
+            AssetLoader.coin.play();
+        } else if (!pipe2.isScored()
+                && pipe2.getX() + (pipe2.getWidth() / 2) < player.getX()
+                + player.getWidth()) {
+            gameWorld.addScore(1);
+            pipe2.setScored(true);
+            AssetLoader.coin.play();
+
+        } else if (!pipe3.isScored()
+                && pipe3.getX() + (pipe3.getWidth() / 2) < player.getX()
+                + player.getWidth()) {
+            gameWorld.addScore(1);
+            pipe3.setScored(true);
+            AssetLoader.coin.play();
+
+        }
+
+        return (pipe1.collides(player)||pipe2.collides(player)||pipe3.collides(player));
+    }
+
+    public void onRestart(){
+        frontGrass.onRestart(0, SCROLL_SPEED);
+        backGrass.onRestart(frontGrass.getTailX(), SCROLL_SPEED);
+        pipe1.onRestart(210, SCROLL_SPEED);
+        pipe2.onRestart(pipe1.getTailX() + PIPE_GAP, SCROLL_SPEED);
+        pipe3.onRestart(pipe2.getTailX() + PIPE_GAP, SCROLL_SPEED);
     }
 
     public Grass getFrontGrass() {
