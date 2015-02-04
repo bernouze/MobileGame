@@ -37,13 +37,13 @@ public class InputHandler implements InputProcessor{
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        player.resetMove();
+      //  player.resetMove();
         return true;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        player.onTouch(screenX, screenY);
+      //  player.onTouch(screenX, screenY);
         return true;
     }
 

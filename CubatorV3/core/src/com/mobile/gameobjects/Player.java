@@ -22,32 +22,42 @@ public class Player {
         this.height = height;
         position = new Vector2(x,y);
         velocity = new Vector2(0,0);
-        acceleration = new Vector2(0,400);
+        acceleration = new Vector2(0,460);
         realSWidth = Gdx.graphics.getWidth();
         realSHeight = Gdx.graphics.getHeight();
 
     }
     public void update(float delta){
-        if (velocity.y < 0)
-            acceleration.y = 400;
-        else {
-            acceleration.y = 0;
-            velocity.y = 0;
-        }
         velocity.add(acceleration.cpy().scl(delta));
-        if (velocity.y > 200)
+
+        if (velocity.y > 200) {
             velocity.y = 200;
+        }
 
         position.add(velocity.cpy().scl(delta));
+
+        // Rotate counterclockwise
+        if (velocity.y < 0) {
+            rotation -= 600 * delta;
+
+            if (rotation < -20) {
+                rotation = -20;
+            }
+        }
+
+        // Rotate clockwise
+        if (isFalling()) {
+            rotation += 480 * delta;
+            if (rotation > 90) {
+                rotation = 90;
+            }
+
+        }
     }
 
     public void onClick(int x, int y)
     {
-        Gdx.app.log("PLayerOnClick", "click x = " + x);
-        Gdx.app.log("PlayerOnClick", "click y = " + y);
-
-        if (x < realSWidth / 2 && y < realSHeight / 2)
-            velocity.y = -140;
+       velocity.y -= 140;
     }
     public void onTouch(int x, int y)
     {
@@ -59,6 +69,15 @@ public class Player {
     public void resetMove()
     {
         velocity.x = 0;
+    }
+
+
+    public boolean isFalling(){
+        return velocity.y > 110;
+    }
+
+    public boolean shouldntFlap(){
+        return velocity.y > 70;
     }
 
     public float getX(){return position.x;}
