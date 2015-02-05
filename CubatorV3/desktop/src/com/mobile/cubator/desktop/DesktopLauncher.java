@@ -8,8 +8,8 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Cubator";
-        config.width = 272;
-        config.height = 408;
+        config.width = 1280;
+        config.height = 720;
 		new LwjglApplication(new CubatorGame(), config);
 	}
 }
