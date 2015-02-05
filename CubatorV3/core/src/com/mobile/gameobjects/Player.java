@@ -60,9 +60,9 @@ public class Player {
         }
 
         position.add(velocity.cpy().scl(delta));
-        boundingCircle.set(position.x + width * 0.45f, position.y + width * 0.40f, width * 0.45f);
+        boundingCircle.set(position.x + 9, position.y + 6, 6.5f);
         // Rotate counterclockwise
-       /* if (velocity.y < 0) {
+        if (velocity.y < 0) {
             rotation -= 600 * delta;
 
             if (rotation < -20) {
@@ -77,7 +77,7 @@ public class Player {
                 rotation = 90;
             }
 
-        }*/
+        }
     }
 
     public void updateReady(float runTime) {
@@ -86,10 +86,9 @@ public class Player {
 
     public void onClick(int x, int y)
     {
-        if (isAlive && !isFalling()) {
+        if (isAlive) {
             AssetLoader.flap.play();
-            velocity.y -= 240;
-            acceleration.y = 260;
+            velocity.y -= 140;
         }
     }
     public void onTouch(int x, int y)
@@ -136,9 +135,6 @@ public class Player {
 
     public void decelerate(){
         acceleration.y = 0;
-        velocity.y = 0;
     }
-
-    public Vector2 getVelocity() {return velocity;}
 
 }
