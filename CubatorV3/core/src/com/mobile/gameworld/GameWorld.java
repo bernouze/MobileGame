@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import com.mobile.cubator.CubatorGame;
+import com.mobile.gameobjects.GameMap;
 import com.mobile.gameobjects.Player;
 import com.mobile.gameobjects.ScrollHandler;
 import com.mobile.helpers.AssetLoader;
@@ -16,7 +18,7 @@ public class GameWorld {
     public enum GameState{
         READY, RUNNING, GAMEOVER, MENU
     }
-    private ScrollHandler scroller;
+    private GameMap scroller;
     private Player player;
     private Rectangle ground;
     private int score = 0;
@@ -28,9 +30,10 @@ public class GameWorld {
     {
         this.midPointY = midPointY;
         currentState = GameState.MENU;
-        player = new Player(33,midPointY - 5, 17,12);
-        scroller = new ScrollHandler(this, midPointY + 66);
-        ground = new Rectangle(0,midPointY + 66, 136, 11);
+        player = new Player(33,midPointY - 5, (int)(CubatorGame.worldWidth / 15),(int)(midPointY / 7));
+        scroller = new GameMap(AssetLoader.map, CubatorGame.worldWidth,midPointY * 2);
+        //scroller = new ScrollHandler(this, midPointY + 66);
+       // ground = new Rectangle(0,midPointY + 66, CubatorGame.worldWidth, 11);
     }
 
     public void update(float delta)
@@ -50,7 +53,7 @@ public class GameWorld {
 
     public void updateReady(float delta){
         player.updateReady(runTime);
-        scroller.updateReady(delta);
+      //  scroller.updateReady(delta);
     }
 
     public void updateRunning(float delta)
@@ -59,22 +62,19 @@ public class GameWorld {
             delta = 0.15f;
 
         player.update(delta);
-        scroller.update(delta);
+       // scroller.update(delta);
 
 
         if (scroller.collides(player) && player.isAlive()){
-            scroller.stop();
-            player.die();
-            AssetLoader.dead.play();
-            currentState = GameState.GAMEOVER.GAMEOVER;
+            player.decelerate();
         }
-        if (Intersector.overlaps(player.getBoundingCircle(), ground))
+      /*  if (Intersector.overlaps(player.getBoundingCircle(), ground))
         {
             scroller.stop();
             player.die();
             player.decelerate();
             currentState = GameState.GAMEOVER.GAMEOVER;
-        }
+        }*/
     }
 
     public int getMidPointY(){return midPointY;}
@@ -99,7 +99,7 @@ public class GameWorld {
         currentState = GameState.READY;
         score = 0;
         player.onRestart(midPointY - 5);
-        scroller.onRestart();
+    //    scroller.onRestart();
 
     }
 
@@ -117,7 +117,7 @@ public class GameWorld {
         return player;
     }
 
-    public ScrollHandler getScroller()
+    public GameMap getScroller()
     {
         return scroller;
     }

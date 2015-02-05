@@ -3,6 +3,7 @@ package com.mobile.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.mobile.cubator.CubatorGame;
 import com.mobile.gameworld.GameRenderer;
 import com.mobile.gameworld.GameWorld;
 import com.mobile.helpers.InputHandler;
@@ -19,14 +20,13 @@ public class GameScreen implements Screen{
         Gdx.app.log("GameScreen", "Attached");
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
-        float gameWidth = 136;
+        float gameWidth = CubatorGame.worldWidth;
         float gameHeight = screenHeight / (screenWidth / gameWidth);
         int midPointY = (int)(gameHeight / 2);
         world = new GameWorld(midPointY);
+        Gdx.input.setInputProcessor(new InputHandler(world, screenWidth / gameWidth, screenHeight / gameHeight));
         renderer = new GameRenderer(world, (int)gameHeight, midPointY);
-
-        Gdx.input.setInputProcessor(new InputHandler(world.getPlayer()));
-    }
+     }
 
     @Override
     public void render(float delta) {

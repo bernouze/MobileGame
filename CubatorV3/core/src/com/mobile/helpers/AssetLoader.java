@@ -2,6 +2,7 @@ package com.mobile.helpers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -17,7 +18,7 @@ public class AssetLoader {
 
     public static Animation birdAnimation;
     public static TextureRegion bird, birdDown, birdUp;
-
+    public static String map;
     public static TextureRegion skullUp, skullDown, bar, logo, zbLogo, playButtonUp, playButtonDown;
 
     public static Sound dead;
@@ -79,6 +80,9 @@ public class AssetLoader {
         font.setScale(.25f, -.25f);
         shadow = new BitmapFont(Gdx.files.internal("data/shadow.fnt"));
         shadow.setScale(.25f, -.25f);
+        FileHandle fd = new FileHandle("data/map.txt");
+        map = fd.readString();
+        Gdx.app.log("GameScreen", map);
     }
 
     public static void dispose() {
